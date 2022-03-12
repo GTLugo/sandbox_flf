@@ -1,0 +1,4 @@
+[submodule "vendor/flugel"]
+	path = vendor/flugel
+	url = https://github.com/GTLugo/flugel_framework.git
+	branch = dev

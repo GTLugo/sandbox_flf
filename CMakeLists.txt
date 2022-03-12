@@ -80,7 +80,7 @@ else()
   #set(FLUGEL_SDL   OFF)
   #set(FLUGEL_WIN32 OFF)
 endif()
-add_subdirectory(vendor/flugel_framework)
+add_subdirectory(vendor/flugel)
 target_link_libraries(${TARGET_NAME} PUBLIC flugel)
 
 # ===================================================
