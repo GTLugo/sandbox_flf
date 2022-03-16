@@ -33,6 +33,7 @@ set_target_properties(${TARGET_NAME}
     OUTPUT_NAME "${TARGET_NAME}"
     )
 
+# Copy resources folder into output dir
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E remove_directory
     "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
@@ -50,6 +51,11 @@ target_compile_definitions(${TARGET_NAME}
     $<$<CONFIG:minsizerel>:MINREL=1>
     )
 
+#target_compile_options(${TARGET_NAME} PRIVATE
+#    $<$<CXX_COMPILER_ID:MSVC>:/W3 /WX>
+#    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+#    )
+
 # ===================================================
 # INCLUDING & LINKING
 # ===================================================
@@ -60,36 +66,16 @@ target_include_directories(${TARGET_NAME} PUBLIC "src" "include")
 target_precompile_headers(${TARGET_NAME} PUBLIC "src/sandbox_pch.hpp")
 
 # ===================================================
-# DEPENDENCIES - VCPKG SUGGESTED
-# ===================================================
-# We need a CMAKE_DIR with some code to find external dependencies
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-
-# ===================================================
 # SUBMODULES
 # ===================================================
 
 # ---- FLUGEL FRAMEWORK ----
-# RENDERING API - MULTIPLE CAN BE ON AT A TIME
+# RENDERING API - MULTIPLE CAN BE SELECTED
 # > OpenGL, (Planned: Vulkan, D3D11)
-# WINDOWING API - ONLY ONE SHOULD BE ON AT A TIME
-# > GLFW, (Planned: SDL2, Win32)
 if(WIN32)
-set(FLUGEL_OPENGL ON)
-set(FLUGEL_VULKAN OFF)
-#set(FLUGEL_D3D11  OFF)
-
-set(FLUGEL_GLFW  ON)
-#set(FLUGEL_SDL   OFF)
-#set(FLUGEL_WIN32 OFF)
+  set(FLUGEL_RENDERING_API OPENGL #[[VULKAN]])
 else()
-set(FLUGEL_OPENGL ON)
-set(FLUGEL_VULKAN OFF)
-#set(FLUGEL_D3D11  OFF)
-
-set(FLUGEL_GLFW  ON)
-#set(FLUGEL_SDL   OFF)
-#set(FLUGEL_WIN32 OFF)
+  set(FLUGEL_RENDERING_API OPENGL #[[VULKAN]])
 endif()
 add_subdirectory(vendor/flugel)
 target_link_libraries(${TARGET_NAME} PUBLIC flugel)

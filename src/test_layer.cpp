@@ -4,10 +4,10 @@
 #include "test_layer.hpp"
 
 namespace sbx {
-  bool TestLayer::onRenderEvent(fge::RenderEvent& e) {
+  bool TestLayer::onRenderEvent(ff::RenderEvent& e) {
     switch (e.action()) {
-      case fge::RenderEvent::Start: {
-        vao_ = fge::VertexArray::create(
+      case ff::RenderEvent::Start: {
+        vao_ = ff::VertexArray::create(
           // Vertices
           {
             -.5f, -.5f,  0.f, /**/.7f, .1f, .1f, 1.f,
@@ -16,14 +16,14 @@ namespace sbx {
           },
           // Layout
           {
-            fge::BufferElement::create<fge::vec3>("pos"),
-            fge::BufferElement::create<fge::vec4>("color"),
+            ff::BufferElement::create<ff::vec3>("pos"),
+            ff::BufferElement::create<ff::vec4>("color"),
           },
           // Indices
-          {0, 1, 2}
+            {0, 1, 2}
         );
 
-        background_ = fge::VertexArray::create(
+        background_ = ff::VertexArray::create(
           // Vertices
           {
             -1.f, -1.f, .1f, /**/ .1, .1, .1, 1.,
@@ -33,21 +33,21 @@ namespace sbx {
           },
           // Layout
           {
-            fge::BufferElement::create<fge::vec3>("pos"),
-            fge::BufferElement::create<fge::vec4>("color"),
+            ff::BufferElement::create<ff::vec3>("pos"),
+            ff::BufferElement::create<ff::vec4>("color"),
           },
           // Indices
-          {0, 1, 2, 2, 3, 0}
+            {0, 1, 2, 2, 3, 0}
         );
 
-        shader_ = fge::Shader::create("res/flugel/shaders/simple_shader.glsl");
+        shader_ = ff::Shader::create("res/flugel/shaders/simple_shader.glsl");
 
         return false;
       }
-      case fge::RenderEvent::AppStep: {
+      case ff::RenderEvent::AppStep: {
         shader_->bind();
-        fge::Renderer::submit(background_);
-        fge::Renderer::submit(vao_);
+        ff::Renderer::submit(background_);
+        ff::Renderer::submit(vao_);
         shader_->unbind();
 
         return false;
@@ -58,9 +58,9 @@ namespace sbx {
     }
   }
 
-  bool TestLayer::onLogicEvent(fge::LogicEvent& e) {
+  bool TestLayer::onLogicEvent(ff::LogicEvent& e) {
 //      switch (e.type()) {
-//        case fge::LogicEventType::Tick: {
+//        case ff::LogicEventType::Tick: {
 //          if (Input::isPressed(Key::Space)) {
 //            FGE_TRACE("{}", (Input::isPressed(Modifier::Shift|Modifier::Control)) ? "OwO" : "UwU");
 //          }
@@ -70,18 +70,18 @@ namespace sbx {
     return false;
   }
 
-  bool TestLayer::onKeyboardEvent(fge::KeyboardEvent& e) {
-    FGE_DEBUG("{}: {}", name_, e);
+  bool TestLayer::onKeyboardEvent(ff::KeyboardEvent& e) {
+    ff::Log::debug("{}: {}", name_, e);
     return false;
   }
 
-  bool TestLayer::onMouseEvent(fge::MouseEvent& e) {
-    FGE_DEBUG("{}: {}", name_, e);
+  bool TestLayer::onMouseEvent(ff::MouseEvent& e) {
+    ff::Log::debug("{}: {}", name_, e);
     return false;
   }
 
-  bool TestLayer::onScrollEvent(fge::ScrollEvent& e) {
-    FGE_DEBUG("{}: {}", name_, e);
+  bool TestLayer::onScrollEvent(ff::ScrollEvent& e) {
+    ff::Log::debug("{}: {}", name_, e);
     return false;
   }
 }

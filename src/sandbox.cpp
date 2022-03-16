@@ -4,28 +4,27 @@
 #include "test_layer.hpp"
 
 namespace sbx {
-  class Sandbox : public fge::App {
+  class Sandbox final : public ff::App {
     public:
       Sandbox()
-        : fge::App{{
+        : ff::App{{
           .title       = "SANDBOX", // title
           .width       = 800, // width
           .height      = 450, // height
-          .renderApi   = fge::Renderer::API::OpenGL,
+          .renderApi   = ff::Renderer::API::OpenGL,
           .customDecor = false
         }} {
-        FGE_TRACE("Constructing sandbox...");
-        //toggleImGui(false);
+        ff::Log::trace("Constructing sandbox...");
         pushLayer(new TestLayer{});
       }
 
-      ~Sandbox() override {
-        FGE_TRACE("Destructing sandbox...");
+      ~Sandbox() final {
+        ff::Log::trace("Destructing sandbox...");
       };
   };
 }
 
-namespace fge {
+namespace ff {
   Unique<App> createApp() {
     return std::move(makeUnique<sbx::Sandbox>());
   }

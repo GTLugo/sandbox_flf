@@ -3,27 +3,25 @@
 #include "flugel.hpp"
 
 namespace sbx {
-  class TestLayer : public fge::Layer {
-    using Input = fge::Input;
-    using Key = fge::Key;
-    using Modifier = fge::Modifier;
+  class TestLayer final : public ff::Layer {
+    using Input = ff::Input;
+    using Key = ff::Key;
+    using Modifier = ff::Modifier;
   public:
-    TestLayer()
-      : Layer{"test_layer"} {
-      FGE_DEBUG("{}", fge::UUID{});
-    }
+    TestLayer() : Layer{"test_layer"} {}
 
-    bool onRenderEvent(fge::RenderEvent& e) final;
-    bool onLogicEvent(fge::LogicEvent& e) final;
-    bool onKeyboardEvent(fge::KeyboardEvent& e) final;
-    bool onMouseEvent(fge::MouseEvent& e) final;
-    bool onScrollEvent(fge::ScrollEvent& e) final;
+    bool onRenderEvent(ff::RenderEvent& e) final;
+    bool onLogicEvent(ff::LogicEvent& e) final;
+    bool onKeyboardEvent(ff::KeyboardEvent& e) final;
+    bool onMouseEvent(ff::MouseEvent& e) final;
+    bool onScrollEvent(ff::ScrollEvent& e) final;
 
   private:
-    fge::Shared<fge::VertexArray> vao_;
-    fge::Shared<fge::VertexArray> background_;
-    fge::Shared<fge::Shader> shader_;
+    ff::Shared<ff::VertexArray> vao_;
+    ff::Shared<ff::VertexArray> background_;
+    ff::Shared<ff::Shader> shader_;
+
     bool left_{false};
-    fge::vec3 pos_{0, 0, 0};
+    ff::vec3 pos_{0, 0, 0};
   };
 }
