@@ -18,7 +18,7 @@ endif()
 
 set(SOURCE_FILES
     src/sandbox.cpp
-    src/test_layer.cpp
+    src/test_world.cpp
     )
 
 # ===================================================

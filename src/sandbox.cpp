@@ -1,7 +1,7 @@
 #include "flugel.hpp"
 #include "entry_point.hpp"
 
-#include "test_layer.hpp"
+#include "test_world.hpp"
 
 namespace sbx {
   class Sandbox final : public ff::App {
@@ -9,13 +9,13 @@ namespace sbx {
       Sandbox()
         : ff::App{{
           .title       = "SANDBOX", // title
-          .width       = 800, // width
-          .height      = 450, // height
+          .width       = 800,       // width
+          .height      = 450,       // height
           .renderApi   = ff::Renderer::API::OpenGL,
-          .customDecor = false
         }} {
         ff::Log::trace("Constructing sandbox...");
-        pushLayer(new TestLayer{});
+        insertWorld(ff::makeUnique<TestWorld>("master"));
+        setActiveWorld("master");
       }
 
       ~Sandbox() final {
