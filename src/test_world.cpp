@@ -4,35 +4,27 @@
 
 #include "test_world.hpp"
 
-#include "camera_system.hpp"
-
 namespace sbx {
   bool TestWorld::onLogicEvent(const ff::LogicEvent& e) {
     switch (e.action()) {
       case ff::LogicEvent::Start: {
-        ff::Log::debug("camera_: \"{}\"", camera_.id());
-        ecs().registerSystem<CameraSystem>();
-        camera_.addComponent<ff::Transform>({})
-            .addComponent<ff::Camera>({-1.f, 1.f, -1.f, 1.f, -1.f, 1.f});
+        // Set up entities
+        ff::Log::debug("background: {}", background_.id());
+        background_.add<ff::Name>("background")
+            .add<ff::Transform>()
+            .add<ff::Mesh>();
+        ff::Log::debug("test_entity: {}", testEntity_.id());
+        testEntity_.add<ff::Name>("test_entity")
+            .add<ff::Transform>()
+            .add<ff::Mesh>();
 
-        ff::Entity testEntity{&ecs()};
-        ff::Log::debug("testEntity: \"{}\"", testEntity.id());
-        testEntity.addComponent<ff::Transform>({});
-        auto& transform{testEntity.component<ff::Transform>()};
-
-        // TODO: automate somehow. reference counting?
-        ecs().removeEntity(testEntity);
-        break;
-      }
-      case ff::LogicEvent::Tick: {
-        if (Input::isPressed(Key::Space)) {
-          ff::Log::debug("{}", (Input::isPressed(Modifier::Shift|Modifier::Control)) ? "OwO" : "UwU");
-        }
         break;
       }
       case ff::LogicEvent::Stop: {
-        // TODO: automate somehow. reference counting?
-        ecs().removeEntity(camera_);
+        testEntity_.kill();
+        background_.kill();
+
+        break;
       }
       default: break;
     }
@@ -48,49 +40,36 @@ namespace sbx {
 //            {.pos = {0.f, 0.f, 0.f}, .color = {0.f, 0.f, 0.f, 1.f}},
 //        };
 
-        vao_ = ff::VertexArray::create(
-            // Vertices
-            {
-                -.5f, -.5f,  0.f, /**/.7f, .1f, .1f, 1.f,
-                .5f, -.5f,  0.f, /**/.1f, .7f, .1f, 1.f,
-                0.f,  .5f,  0.f, /**/.1f, .1f, .7f, 1.f
-            },
-            // Layout
-            {
-                ff::BufferElement::create<ff::vec3>("pos"),
-                ff::BufferElement::create<ff::vec4>("color"),
-            },
-            // Indices
-            {0, 1, 2}
+        testEntity_.set<ff::Mesh>(
+            ff::VertexArray::create(
+                { // Vertices
+                    -.5f, -.5f,  0.f, /**/.7f, .1f, .1f, 1.f,
+                     .5f, -.5f,  0.f, /**/.1f, .7f, .1f, 1.f,
+                     0.f,  .5f,  0.f, /**/.1f, .1f, .7f, 1.f
+                },
+                { // Layout
+                    ff::BufferElement::create<ff::vec3>("pos"),
+                    ff::BufferElement::create<ff::vec4>("color"),
+                },
+                {0, 1, 2}), // Indices
+            ff::Shader::create("res/flugel/shaders/simple_shader.glsl")
         );
 
-        background_ = ff::VertexArray::create(
-            // Vertices
-            {
-                -1.f, -1.f, .1f, /**/ .1, .1, .1, 1.,
-                1.f, -1.f, .1f, /**/ .1, .1, .1, 1.,
-                1.f,  1.f, .1f, /**/ .7, .6, .6, 1.,
-                -1.f,  1.f, .1f, /**/ .7, .6, .6, 1.
-            },
-            // Layout
-            {
-                ff::BufferElement::create<ff::vec3>("pos"),
-                ff::BufferElement::create<ff::vec4>("color"),
-            },
-            // Indices
-            {0, 1, 2, 2, 3, 0}
+        background_.set<ff::Mesh>(
+            ff::VertexArray::create(
+                { // Vertices
+                    -1.f, -1.f, .1f, /**/ .1, .1, .1, 1.,
+                     1.f, -1.f, .1f, /**/ .1, .1, .1, 1.,
+                     1.f,  1.f, .1f, /**/ .7, .6, .6, 1.,
+                    -1.f,  1.f, .1f, /**/ .7, .6, .6, 1.
+                },
+                { // Layout
+                    ff::BufferElement::create<ff::vec3>("pos"),
+                    ff::BufferElement::create<ff::vec4>("color"),
+                },
+                {0, 1, 2, 2, 3, 0}), // Indices
+            ff::Shader::create("res/flugel/shaders/simple_shader.glsl")
         );
-
-        shader_ = ff::Shader::create("res/flugel/shaders/simple_shader.glsl");
-
-        return false;
-      }
-      case ff::RenderEvent::AppStep: {
-        shader_->pushMat4(camera_.component<ff::Camera>().viewProjMatrix(), "vpMatrix");
-        shader_->bind();
-        ff::Renderer::submit(background_);
-        ff::Renderer::submit(vao_);
-        shader_->unbind();
 
         return false;
       }

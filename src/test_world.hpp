@@ -23,11 +23,8 @@ namespace sbx {
     //bool onCursorEvent(const ff::CursorEvent& e) override;
     bool onScrollEvent(const ff::ScrollEvent& e) override;
   private:
-    ff::Shared<ff::VertexArray> vao_;
-    ff::Shared<ff::VertexArray> background_;
-    ff::Shared<ff::Shader> shader_;
-
-    ff::Entity camera_{&ecs()};
+    ff::Entity background_{&ecs()};
+    ff::Entity testEntity_{&ecs()};
   };
 }
 
