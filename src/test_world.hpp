@@ -14,14 +14,10 @@ namespace sbx {
   public:
     explicit TestWorld(const std::string& name) : ff::World{name} {}
 
-    //bool onAppEvent(const ff::AppEvent& e) override;
-    bool onLogicEvent(const ff::LogicEvent& e) override;
-    bool onRenderEvent(const ff::RenderEvent& e) override;
+    //bool onMainEvent(const ff::MainEvent& e) override;
+    bool onGameEvent(const ff::GameEvent& e) override;
     //bool onWindowEvent(const ff::WindowEvent& e) override;
-    bool onKeyboardEvent(const ff::KeyboardEvent& e) override;
-    bool onMouseEvent(const ff::MouseEvent& e) override;
-    //bool onCursorEvent(const ff::CursorEvent& e) override;
-    bool onScrollEvent(const ff::ScrollEvent& e) override;
+    bool onInputEvent(const ff::InputEvent& e) override;
   private:
     ff::Entity background_{&ecs()};
     ff::Entity testEntity_{&ecs()};
