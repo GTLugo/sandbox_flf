@@ -14,13 +14,16 @@ namespace sbx {
           .renderApi   = ff::Renderer::API::OpenGL,
         }} {
         ff::Log::trace("Constructing sandbox...");
-        insertWorld(ff::makeUnique<TestWorld>("master"));
-        setActiveWorld("master");
+        insertWorld(masterWorld_);
+        setActiveWorld(masterWorld_);
       }
 
       ~Sandbox() final {
         ff::Log::trace("Destructing sandbox...");
       };
+
+  private:
+    ff::Shared<ff::World> masterWorld_{ff::makeShared<TestWorld>("master")};
   };
 }
 
