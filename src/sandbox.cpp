@@ -8,14 +8,13 @@ namespace sbx {
     public:
       Sandbox()
         : ff::App{{
-          .title       = "SANDBOX", // title
-          .width       = 800,       // width
-          .height      = 450,       // height
-          .renderApi   = ff::Renderer::API::OpenGL,
+          .title     = "Flugel Framework Test", // title
+          .width     = 800,       // width
+          .height    = 450,       // height
+          .renderApi = ff::Renderer::API::OpenGL,
         }} {
         ff::Log::trace("Constructing sandbox...");
-        insertWorld(masterWorld_);
-        setActiveWorld(masterWorld_);
+        insertWorldAsActive(masterWorld_);
       }
 
       ~Sandbox() final {
@@ -23,7 +22,7 @@ namespace sbx {
       };
 
   private:
-    ff::Shared<ff::World> masterWorld_{ff::makeShared<TestWorld>("master")};
+    ff::Shared<ff::World> masterWorld_{new TestWorld{"master"}};
   };
 }
 

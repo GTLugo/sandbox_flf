@@ -19,8 +19,9 @@ namespace sbx {
     //bool onWindowEvent(const ff::WindowEvent& e) override;
     bool onInputEvent(const ff::InputEvent& e) override;
   private:
-    ff::Entity background_{&ecs()};
-    ff::Entity testEntity_{&ecs()};
+    ff::Entity background_{ecs()};
+    ff::Entity testEntity_{ecs()};
+    ff::Shared<ff::Shader> simpleShader_;
   };
 }
 

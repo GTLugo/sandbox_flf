@@ -7,7 +7,12 @@
 namespace sbx {
   bool TestWorld::onGameEvent(const ff::GameEvent& e) {
     return std::visit(ff::EventVisitor{
+        [=](const ff::GameAwakeEvent&) {
+          simpleShader_ = ff::Shader::create("res/flugel/shaders/simple_shader.glsl");
+          return false;
+        },
         [=](const ff::GameStartEvent&) {
+
           // Set up entities
           ff::Log::debug("background: {}", background_.id());
           background_.add<ff::Name>("background")
@@ -21,11 +26,11 @@ namespace sbx {
                           -1.f,  1.f, .1f, /**/ .7, .6, .6, 1.
                       },
                       { // Layout
-                          ff::BufferElement::create<ff::vec3>("pos"),
-                          ff::BufferElement::create<ff::vec4>("color"),
+                          ff::VertexAttribute<ff::vec3>{"pos"},
+                          ff::VertexAttribute<ff::vec4>{"color"},
                       },
                       {0, 1, 2, 2, 3, 0}), // Indices
-                  ff::Shader::create("res/flugel/shaders/simple_shader.glsl")
+                  simpleShader_
               );
           ff::Log::debug("test_entity: {}", testEntity_.id());
           testEntity_.add<ff::Name>("test_entity")
@@ -38,13 +43,31 @@ namespace sbx {
                           0.f,  .5f,  0.f, /**/.1f, .1f, .7f, 1.f
                       },
                       { // Layout
-                          ff::BufferElement::create<ff::vec3>("pos"),
-                          ff::BufferElement::create<ff::vec4>("color"),
+                          ff::VertexAttribute<ff::vec3>{"pos"},
+                          ff::VertexAttribute<ff::vec4>{"color"},
                       },
                       {0, 1, 2}), // Indices
-                  ff::Shader::create("res/flugel/shaders/simple_shader.glsl")
+                  simpleShader_
               );
 
+          ff::Entity tempEntity{ecs()};
+          tempEntity.add<ff::Name>("temp_entity")
+              .add<ff::Transform>()
+              .add<ff::Mesh>(
+                  ff::VertexArray::create(
+                      { // Vertices
+                          -.5f, -.5f,  0.f, /**/.7f, .1f, .1f, 1.f,
+                          .5f, -.5f,  0.f, /**/.1f, .7f, .1f, 1.f,
+                          0.f,  .5f,  0.f, /**/.1f, .1f, .7f, 1.f
+                      },
+                      { // Layout
+                          ff::VertexAttribute<ff::vec3>{"pos"},
+                          ff::VertexAttribute<ff::vec4>{"color"},
+                      },
+                      {0, 1, 2}), // Indices
+                  simpleShader_
+              );
+          tempEntity.kill();
           return false;
         },
         [=](const ff::GameStopEvent&) {
