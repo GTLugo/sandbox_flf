@@ -34,13 +34,17 @@ set_target_properties(${TARGET_NAME}
     )
 
 # Copy resources folder into output dir
-add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+add_custom_target(delete_resources ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
-add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}
+    COMMENT "Cleaning output resource folder")
+add_custom_target(copy_resources ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}
+    COMMENT "Copying resource folder to output")
+add_dependencies(${TARGET_NAME} copy_resources)
+add_dependencies(copy_resources delete_resources)
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME}
@@ -73,9 +77,9 @@ target_precompile_headers(${TARGET_NAME} PUBLIC "src/sandbox_pch.hpp")
 # RENDERING API - MULTIPLE CAN BE SELECTED
 # > OpenGL, (Planned: Vulkan, D3D11)
 if(WIN32)
-  set(FLUGEL_RENDERING_API OPENGL #[[VULKAN]])
+  set(FLUGEL_RENDERING_API OPENGL VULKAN)
 else()
-  set(FLUGEL_RENDERING_API OPENGL #[[VULKAN]])
+  set(FLUGEL_RENDERING_API OPENGL VULKAN)
 endif()
 add_subdirectory(vendor/flugel)
 target_link_libraries(${TARGET_NAME} PUBLIC flugel)

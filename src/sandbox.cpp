@@ -8,9 +8,9 @@ namespace sbx {
     public:
       Sandbox()
         : ff::App{{
-          .title     = "Flugel Framework Test", // title
-          .width     = 800,       // width
-          .height    = 450,       // height
+          .title     = "Flugel Framework Test",
+          .width     = 800,
+          .height    = 450,
           .renderApi = ff::Renderer::API::OpenGL,
         }} {
         ff::Log::trace("Constructing sandbox...");
